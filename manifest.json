@@ -1,14 +1,18 @@
 {
-	"defaultLocale": "en",
-	"identifier": "com.KaitlinSalzke.Scheduling",
-	"author": "Kaitlin Salzke",
-	"description": "A series of scripts to assist with scheduling in OmniFocus.",
-	"version": "1.0.0",
-	"actions": [
-		{
-			"identifier": "rescheduleTask"
-		},
-		{ "identifier": "tagDueTasks" }
-	],
-	"libraries": []
+  "defaultLocale": "en",
+  "identifier": "com.KaitlinSalzke.Scheduling",
+  "author": "Kaitlin Salzke",
+  "description": "A series of scripts to assist with scheduling in OmniFocus.",
+  "version": "1.0.0",
+  "actions": [
+    {
+      "identifier": "rescheduleTask"
+    },
+    { "identifier": "tagDueTasks" }
+  ],
+  "libraries": [
+    {
+      "identifier": "schedulingConfig"
+    }
+  ]
 }

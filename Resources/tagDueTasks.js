@@ -11,9 +11,11 @@
 
 var _ = (function() {
   var action = new PlugIn.Action(function(selection, sender) {
+    config = this.schedulingConfig;
+    todayTag = config.todayTag();
+
     var now = new Date();
     var today = Calendar.current.startOfDay(now);
-    console.log(today);
 
     var tasksDueToday = new Array();
     library.apply(function(item) {
@@ -32,7 +34,7 @@ var _ = (function() {
     });
 
     tasksDueToday.forEach(task => {
-      task.addTag(tagNamed("Status").tagNamed("🎯 MIT"));
+      task.addTag(todayTag);
     });
   });
 
