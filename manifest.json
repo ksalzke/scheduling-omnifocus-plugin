@@ -8,7 +8,8 @@
     {
       "identifier": "rescheduleTask"
     },
-    { "identifier": "tagDueTasks" }
+    { "identifier": "tagDueTasks" },
+    { "identifier": "updateScheduleTags" }
   ],
   "libraries": [
     {
