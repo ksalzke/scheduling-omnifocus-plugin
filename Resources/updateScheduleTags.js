@@ -12,10 +12,42 @@ var _ = (function() {
 
     console.log(year, month, date, weekday, quarter, week); // log current date details
 
-    // rename 'This Year (YYYY)' tag to current year
-    // rename 'This Quarter (QX YYYY)' tag to current year
-    // rename 'This Month (MMMMMMMM YYYY)' tag to current month
-    // rename
+    // TIDY UP FROM PAST DATES
+    // First, deal with dates that have passed.
+    // -- If This Year/Next Year has passed, move all tasks in subtags to 'Today'
+    // -- If This Quarter/Next Quarter has passed, move all tasks in subtags to 'Today'
+    // -- If This Month/Next Month has passed, move all tasks in subtags to 'Today'
+    // -- If This Week/Next Week has passed, move all tasks in subtags to 'Today'
+    // -- Check all subtags of 'This Week' and 'Next Week', and if the dates have passed, move all tasks to 'Today' and delete tag.
+    //
+    // Next, deal with periods that have started but not finished yet.
+    // -- If Next Week is current week, move tasks from 'Sometime Next Week' to 'Sometime This Week' and move all other tags to be subtags of 'This Week'.
+    // -- Otherwise, check remaining week tags. If current week, move all tasks to 'Sometime This Week' and delete original week tag.
+    // -- If Next Month is current month, move tasks to 'Sometime This Month'.
+    // -- Otherwise, check remaining month tags. If current month, move all tasks to 'Sometime This Month' and delete original month tag.
+    // -- If Next Quarter is current quarter, move tasks from 'Sometime Next Quarter' to 'Sometime This Quarter' and move all other tags to be subtags of 'This Quarter'.
+    // -- If Next Year is current year, move tasks from 'Sometime Next Year' to 'Sometime This Year' and move all other tags to be subtags of 'This Year'.
+    //
+    // RENAME RE-USED TAGS
+    // Rename 'This Year (YYYY)' tag to current year
+    // Rename 'This Quarter (QX YYYY)' tag to current year
+    // Rename 'This Month (MMMMMMMM YYYY)' tag to current month
+    // Rename 'This Week (DD-DD MMM YYYY)' tag to current week
+    // Rename 'Today (D/M/YY)' tag to current day (or create tag if no 'Today' tag exists)
+    // Rename 'Tomorrow (D/M/YY)' tag to tomorrow's day (or create tag if no 'Tomorrow' tag exists)
+    // Rename 'Next Week' tag to next week
+    // Rename 'Next Month' tag to next month
+    // Rename 'Next Quarter' tag to next quarter
+    // Rename 'Next Year' tag to next year
+    //
+    // CREATE OTHER TAGS AS NEEDED
+    // Ensure all daily tags are created for this week
+    // Ensure all daily tags are created for next week (if in this month)
+    // Ensure all daily tags are created for next week (if in next month)
+    // Ensure all week tags (and 'sometime' tag) are created for this month
+    // Ensure tag has been created for next month (if in this quarter)
+    // Ensure all month tags (and 'sometime' tag) are created for next quarter
+    // Ensure all quarter tags (with monthly subtags & 'sometime' subtag) are created for next year
   });
 
   action.validate = function(selection, sender) {
