@@ -3,7 +3,7 @@ var _ = (function() {
     // get details of current date
     now = new Date();
     //now.setDate(9);
-    year = now.getFullYear(); // 4 digit number
+    currentYear = now.getFullYear(); // 4 digit number
     month = now.toLocaleDateString("en-US", { month: "long" }); // full month name as a string
     date = now.getDate(); // as a number (1-31)
     weekday = now.toLocaleDateString("en-US", { weekday: "long" }); // full weekday name as a string
@@ -12,14 +12,28 @@ var _ = (function() {
 
     console.log(year, month, date, weekday, quarter, week); // log current date details
 
+    function schedulingFlattenedTags() {
+      schedulingTag = tagNamed("Scheduled");
+      let schedulingTags = [];
+      schedulingTag.apply(tag => schedulingTags.push(tag));
+      return schedulingTags;
+    }
+
     // TIDY UP FROM PAST DATES
     // First, deal with dates that have passed.
-    // -- If This Year/Next Year has passed, move all tasks in subtags to 'Today'
-    // -- If This Quarter/Next Quarter has passed, move all tasks in subtags to 'Today'
-    // -- If This Month/Next Month has passed, move all tasks in subtags to 'Today'
-    // -- If This Week/Next Week has passed, move all tasks in subtags to 'Today'
-    // -- Check all subtags of 'This Week' and 'Next Week', and if the dates have passed, move all tasks to 'Today' and delete tag.
-    //
+    schedulingFlattenedTags().forEach(
+      tag => {
+        // -- If This Year/Next Year has passed, move all tasks in subtags to 'Today'
+        let tagYear = tag.name.match(/(?:This|Next) Year \((\d{4})\)/);
+        if (tagYear !== null && Number(tagYear[1]) < currentYear) {
+          console.log(tag.name);
+        }
+      }
+      // -- If This Quarter/Next Quarter has passed, move all tasks in subtags to 'Today'
+      // -- If This Month/Next Month has passed, move all tasks in subtags to 'Today'
+      // -- If This Week/Next Week has passed, move all tasks in subtags to 'Today'
+      // -- Check all subtags of 'This Week' and 'Next Week', and if the dates have passed, move all tasks to 'Today' and delete tag.
+    );
     // Next, deal with periods that have started but not finished yet.
     // -- If Next Week is current week, move tasks from 'Sometime Next Week' to 'Sometime This Week' and move all other tags to be subtags of 'This Week'.
     // -- Otherwise, check remaining week tags. If current week, move all tasks to 'Sometime This Week' and delete original week tag.
