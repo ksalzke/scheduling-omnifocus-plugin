@@ -26,7 +26,7 @@ var _ = (function() {
         // -- If This Year/Next Year has passed, move all tasks in subtags to 'Today'
         let tagYear = tag.name.match(/(?:This|Next) Year \((\d{4})\)/);
         if (tagYear !== null && Number(tagYear[1]) < currentYear) {
-          console.log(tag.name);
+          moveTaggedTasksToToday(tag);
         }
       }
       // -- If This Quarter/Next Quarter has passed, move all tasks in subtags to 'Today'
@@ -120,4 +120,30 @@ function getWeek(date) {
   } else {
     return `Week ${weekNumber} (${month} ${firstDateOfWeek}-${lastDateOfWeek})`;
   }
+}
+
+/* moves all tasks contained by a tag and its subtags to 'Today' */
+function moveTaggedTasksToToday(tag) {
+  function todayTag() {
+    console.log("in todayTag function");
+    tagNamed("Scheduled").apply(tag => {
+      if (/Today/.test(tag.name)) {
+        console.log(tag);
+        return tag;
+      }
+    });
+  }
+
+  tag.apply(tag => {
+    tag.tasks.forEach(task => {
+      task.addTag(todayTag());
+    });
+    if (
+      !/This/.test(tag.name) &&
+      !/Tomorrow/.test(tag.name) &&
+      !/Sometime/.test(tag.name)
+    ) {
+      deleteObject(tag);
+    }
+  });
 }
