@@ -8,8 +8,8 @@
 	"label": "Reschedule Task(s)",
 	"shortLabel": "Reschedule Task(s)"
 }*/
-var _ = (function() {
-  var action = new PlugIn.Action(function(selection, sender) {
+(() => {
+  var action = new PlugIn.Action(function (selection, sender) {
     // action code
     // selection options: tasks, projects, folders, tags
 
@@ -24,7 +24,7 @@ var _ = (function() {
 
     // generate labels for popup menu
     rescheduleChoicesLabels = [];
-    rescheduleChoices.forEach(function(tag) {
+    rescheduleChoices.forEach(function (tag) {
       rescheduleChoicesLabels.push(tag.name);
     });
 
@@ -43,27 +43,27 @@ var _ = (function() {
     formPromise = inputForm.show(formPrompt, "Continue");
 
     // VALIDATE THE USER INPUT
-    inputForm.validate = function(formObject) {
+    inputForm.validate = function (formObject) {
       validation = true;
       return validation;
     };
 
     // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
-    formPromise.then(function(formObject) {
+    formPromise.then(function (formObject) {
       selectedRescheduleDate = formObject.values["rescheduleDate"];
-      selection.tasks.forEach(function(task) {
+      selection.tasks.forEach(function (task) {
         task.removeTags(rescheduleChoices);
         task.addTag(selectedRescheduleDate);
       });
     });
 
     // PROMISE FUNCTION CALLED UPON FORM CANCELLATION
-    formPromise.catch(function(err) {
+    formPromise.catch(function (err) {
       console.log("form cancelled", err.message);
     });
   });
 
-  action.validate = function(selection, sender) {
+  action.validate = function (selection, sender) {
     // validation code
     // selection options: tasks, projects, folders, tags
     return selection.tasks.length > 0;
@@ -71,4 +71,3 @@ var _ = (function() {
 
   return action;
 })();
-_;

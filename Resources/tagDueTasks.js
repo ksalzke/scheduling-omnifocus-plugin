@@ -9,8 +9,8 @@
 	"shortLabel": "Mark Due As MIT"
 }*/
 
-var _ = (function() {
-  var action = new PlugIn.Action(function(selection, sender) {
+(() => {
+  var action = new PlugIn.Action(function (selection, sender) {
     config = this.schedulingConfig;
     todayTag = config.todayTag();
 
@@ -18,9 +18,9 @@ var _ = (function() {
     var today = Calendar.current.startOfDay(now);
 
     var tasksDueToday = new Array();
-    library.apply(function(item) {
+    library.apply(function (item) {
       if (item instanceof Project && item.task.hasChildren) {
-        item.task.children.forEach(tsk => {
+        item.task.children.forEach((tsk) => {
           if (tsk.effectiveDueDate !== null) {
             if (
               Calendar.current.startOfDay(tsk.effectiveDueDate).getTime() ==
@@ -33,15 +33,14 @@ var _ = (function() {
       }
     });
 
-    tasksDueToday.forEach(task => {
+    tasksDueToday.forEach((task) => {
       task.addTag(todayTag);
     });
   });
 
-  action.validate = function(selection, sender) {
+  action.validate = function (selection, sender) {
     return true;
   };
 
   return action;
 })();
-_;

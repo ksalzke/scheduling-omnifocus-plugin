@@ -1,4 +1,4 @@
-var _ = (function() {
+(() => {
   var schedulingConfig = new PlugIn.Library(new Version("1.0"));
 
   schedulingConfig.todayTag = () => {
@@ -13,4 +13,3 @@ var _ = (function() {
 
   return schedulingConfig;
 })();
-_;
