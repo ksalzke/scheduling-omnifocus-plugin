@@ -41,12 +41,13 @@
       task.removeTag(tomorrowWeekdayTag);
     });
 
-    // if 'Dependency' plugin is installed, check if dependant tasks have had all prerequisites completed
+    // if 'Dependency' plugin is installed, check if dependant tasks have had all prerequisites completed, and update due dates
     dependencyPlugin = PlugIn.find("com.KaitlinSalzke.DependencyForOmniFocus");
     if (dependencyPlugin == null) {
       console.warn("DependencyForOmniFocus plugin is not installed.");
     } else {
       dependencyPlugin.action("checkPrerequisites").perform();
+      dependencyPlugin.action("updateDueDates").perform();
     }
 
     // if 'com.KaitlinSalzke.config' installed, deal with 'maybe' folders and project tags
