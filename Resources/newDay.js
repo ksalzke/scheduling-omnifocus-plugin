@@ -22,6 +22,14 @@
       task.removeTag(tomorrowTag);
     });
 
+    // add 'Today' tag to any tasks assigned to '<Weekday>s'
+    now = new Date()
+    weekday = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(now)
+    weekdaysTag = tagsMatching(`${weekday}s`)[0]
+    weekdaysTag.tasks.forEach(task => {
+      task.addTag(todayTag)
+    })
+
     //// Move tomorrow's tasks from named day to 'Tomorrow'
     // get tag with the name of the weekday tomorrow
     timeToAdd = new DateComponents();
