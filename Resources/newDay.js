@@ -41,6 +41,9 @@
       task.removeTag(tomorrowWeekdayTag);
     });
 
+    // Tag any tasks due today with 'Due Today'
+    PlugIn.find("com.KaitlinSalzke.Scheduling").action("tagDueTasks").perform();
+
     // if 'Dependency' plugin is installed, check if dependant tasks have had all prerequisites completed, and update due dates
     dependencyPlugin = PlugIn.find("com.KaitlinSalzke.DependencyForOmniFocus");
     if (dependencyPlugin == null) {

@@ -1,18 +1,7 @@
-/*{
-	"type": "action",
-	"targets": ["omnifocus"],
-	"author": "Kaitlin Salzke",
-	"identifier": "com.KaitlinSalzke.markDueTasksAsMIT",
-	"version": "1.0",
-	"description": "Tag tasks due today with 'MIT'",
-	"label": "Mark Due As MIT",
-	"shortLabel": "Mark Due As MIT"
-}*/
-
 (() => {
   var action = new PlugIn.Action(function (selection, sender) {
     config = this.schedulingConfig;
-    todayTag = config.todayTag();
+    todayTag = tagsMatching("Due Today")[0]
 
     var now = new Date();
     var today = Calendar.current.startOfDay(now);
