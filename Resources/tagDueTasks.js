@@ -1,4 +1,4 @@
-/* global PlugIn tagsMatching Calendar library Project */
+/* global PlugIn tagsMatching Calendar flattenedTasks */
 (() => {
   const action = new PlugIn.Action(function (selection, sender) {
     const todayTag = tagsMatching('Due Today')[0]
@@ -6,21 +6,7 @@
     const now = new Date()
     const today = Calendar.current.startOfDay(now)
 
-    const tasksDueToday = []
-    library.apply(function (item) {
-      if (item instanceof Project && item.task.hasChildren) {
-        item.task.children.forEach((tsk) => {
-          if (tsk.effectiveDueDate !== null) {
-            if (
-              Calendar.current.startOfDay(tsk.effectiveDueDate).getTime() ===
-              today.getTime()
-            ) {
-              tasksDueToday.push(tsk)
-            }
-          }
-        })
-      }
-    })
+    const tasksDueToday = flattenedTasks.filter(task => task.effectiveDueDate !== null && Calendar.current.startOfDay(task.effectiveDueDate).getTime() === today.getTime())
 
     tasksDueToday.forEach((task) => {
       task.addTag(todayTag)
