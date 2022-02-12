@@ -1,4 +1,4 @@
-/* global PlugIn deleteObject tagsMatching Calendar DateComponents Project ApplyResult library Folder moveSections */
+/* global PlugIn deleteObject Calendar DateComponents Project ApplyResult library Folder moveSections */
 (() => {
   const action = new PlugIn.Action(function (selection, sender) {
     const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
@@ -14,22 +14,22 @@
       deleteObject(backupCopyTag)
     }
 
-    const todayTag = functionLibrary.findTag('Today')
+    // const todayTag = functionLibrary.findTag('Today')
     const tomorrowTag = functionLibrary.findTag('Tomorrow')
 
     // Move tasks from 'Tomorrow' to 'Today'
     tomorrowTag.tasks.forEach(function (task) {
-      task.addTag(todayTag)
+      task.flagged = true
       task.removeTag(tomorrowTag)
     })
 
     // add 'Today' tag to any tasks assigned to '<Weekday>s'
-    const now = new Date()
+    /* const now = new Date()
     const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now)
     const weekdaysTag = tagsMatching(`${weekday}s`)[0]
     weekdaysTag.tasks.forEach(task => {
       task.addTag(todayTag)
-    })
+    }) */
 
     /// / Move tomorrow's tasks from named day to 'Tomorrow'
     // get tag with the name of the weekday tomorrow
