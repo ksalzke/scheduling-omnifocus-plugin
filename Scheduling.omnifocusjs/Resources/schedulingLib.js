@@ -13,9 +13,10 @@
 
   schedulingLib.getString = (date) => {
     const dateString = schedulingLib.getDateString(date)
-    if (Calendar.current.dateComponentsBetweenDates(new Date(), date) > 8) return dateString
+    const daysFromToday = Calendar.current.dateComponentsBetweenDates(new Date(), date).day
+    if (daysFromToday >= 7) return dateString
 
-    // TODO: Use 'Tomorrow' for tomorrow
+    if (daysFromToday <= 1) return `Tomorrow (${dateString})`
 
     // otherwise, date is in next 7 days - include day of week
     const dayFormatter = Formatter.Date.withFormat('EEEE')
@@ -43,14 +44,12 @@
   }
 
   schedulingLib.sortDateTags = () => {
-    // TODO: implement this
     const parent = schedulingLib.getSchedulingTag()
     const sortedTags = parent.children.sort((a, b) => { return schedulingLib.getDate(a) - schedulingLib.getDate(b) })
     moveTags(sortedTags, parent)
   }
 
   schedulingLib.getDate = (tag) => {
-    // TODO: implement this
     const formatter = schedulingLib.getDateFormatter()
     const date = formatter.dateFromString(tag.name)
     return date
