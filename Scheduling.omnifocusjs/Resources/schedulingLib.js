@@ -85,7 +85,7 @@
 
     // move any tags from the past into 'Today'
     for (const tag of schedulingLib.getSchedulingTag().children) {
-      if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday()
+      if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday(tag)
       else break
     }
   }

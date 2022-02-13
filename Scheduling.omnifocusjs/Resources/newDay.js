@@ -1,7 +1,7 @@
 /* global PlugIn deleteObject Calendar DateComponents Project ApplyResult library Folder moveSections */
 (() => {
   const action = new PlugIn.Action(function (selection, sender) {
-    this.schedulingLibrary.updateTags()
+    this.schedulingLib.updateTags()
 
     
 
