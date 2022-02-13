@@ -55,5 +55,22 @@
     return date
   }
 
+  schedulingLib.makeToday = (tag) => {
+    // TODO: add flag/tag option
+    for (const task of tag.tasks) task.flagged = true
+    deleteObject(tag)
+  }
+
+  schedulingLib.updateTags = () => {
+    // sort tags
+    schedulingLib.sortDateTags()
+
+    // move any tags from the past into 'Today'
+    for (const tag of schedulingLib.getSchedulingTag().children) {
+      if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday()
+      else break
+    }
+  }
+
   return schedulingLib
 })()

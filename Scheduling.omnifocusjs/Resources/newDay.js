@@ -1,27 +1,9 @@
 /* global PlugIn deleteObject Calendar DateComponents Project ApplyResult library Folder moveSections */
 (() => {
   const action = new PlugIn.Action(function (selection, sender) {
-    const functionLibrary = PlugIn.find('com.KaitlinSalzke.functionLibrary').library(
-      'functionLibrary'
-    )
+    this.schedulingLibrary.updateTags()
 
-    // if 'sort by importance' plugin installed, delete backup tag
-    const sortByImportancePlugin = PlugIn.find('com.KaitlinSalzke.sortByImportance')
-    if (sortByImportancePlugin !== null) {
-      const backupCopyTag = sortByImportancePlugin
-        .library('sortByImportanceConfig')
-        .backupCopyTag()
-      deleteObject(backupCopyTag)
-    }
-
-    // const todayTag = functionLibrary.findTag('Today')
-    const tomorrowTag = functionLibrary.findTag('Tomorrow')
-
-    // Move tasks from 'Tomorrow' to 'Today'
-    tomorrowTag.tasks.forEach(function (task) {
-      task.flagged = true
-      task.removeTag(tomorrowTag)
-    })
+    
 
     // add 'Today' tag to any tasks assigned to '<Weekday>s'
     /* const now = new Date()
@@ -31,6 +13,7 @@
       task.addTag(todayTag)
     }) */
 
+    /*
     /// / Move tomorrow's tasks from named day to 'Tomorrow'
     // get tag with the name of the weekday tomorrow
     const timeToAdd = new DateComponents()
@@ -93,7 +76,7 @@
         allRemainingTasks,
         config.projectTags()
       )
-    }
+    } */
   })
 
   action.validate = function (selection, sender) {
