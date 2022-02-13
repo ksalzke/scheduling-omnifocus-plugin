@@ -9,5 +9,6 @@
     { "identifier": "tagDueTasks" },
     { "identifier": "newDay" }
   ],
-  "libraries": [{ "identifier": "schedulingConfig" }]
+  "libraries": [{ "identifier": "schedulingConfig" },
+                { "identifier": "schedulingLib" }]
 }
