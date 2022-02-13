@@ -6,16 +6,11 @@
     const form = new Form()
     form.addField(new Form.Field.Date('date', 'Date', null, lib.getDateFormatter()))
 
-    // TODO: validation - confirm date is in the future
+    // TODO: validation - confirm date is in the future (or today)
 
     await form.show('Reschedule to...', 'Reschedule') // TODO: Use 'schedule' if not already scheduled
 
-    const dateTag = lib.getTag(form.values.date)
-
-    for (const task of selection.tasks) {
-      task.removeTags(lib.getSchedulingTag().children)
-      task.addTag(dateTag)
-    }
+    for (const task of selection.tasks) lib.rescheduleTask(task, form.values.date)
   })
 
   action.validate = function (selection, sender) {

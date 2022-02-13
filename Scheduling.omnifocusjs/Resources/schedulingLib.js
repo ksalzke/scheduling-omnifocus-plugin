@@ -1,4 +1,4 @@
-/* global PlugIn Version Formatter flattenedTags Tag Calendar moveTags */
+/* global PlugIn Version Formatter flattenedTags Tag Calendar moveTags deleteObject */
 (() => {
   const schedulingLib = new PlugIn.Library(new Version('1.0'))
 
@@ -15,8 +15,8 @@
     const dateString = schedulingLib.getDateString(date)
     const daysFromToday = Calendar.current.dateComponentsBetweenDates(new Date(), date).day
     if (daysFromToday >= 7) return dateString
-
-    if (daysFromToday <= 1) return `Tomorrow (${dateString})`
+    if (daysFromToday === 1) return `Tomorrow (${dateString})`
+    if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
 
     // otherwise, date is in next 7 days - include day of week
     const dayFormatter = Formatter.Date.withFormat('EEEE')
@@ -32,6 +32,8 @@
   schedulingLib.getTag = (date) => {
     const dateString = schedulingLib.getDateString(date)
     const parent = schedulingLib.getSchedulingTag()
+
+    if (dateString === null) return null // date is today and not using today tag TODO: allow today tag to be set via pref
 
     const createTag = date => {
       const tag = new Tag(schedulingLib.getString(date), parent)
@@ -53,6 +55,22 @@
     const formatter = schedulingLib.getDateFormatter()
     const date = formatter.dateFromString(tag.name)
     return date
+  }
+
+  schedulingLib.isToday = (date) => {
+    console.log(Calendar.current.startOfDay(date).getTime())
+    console.log(Calendar.current.startOfDay(new Date()).getTime())
+    return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
+  }
+
+  schedulingLib.rescheduleTask = (task, date) => {
+    if (schedulingLib.isToday(date)) task.flagged = true
+    else {
+      const dateTag = schedulingLib.getTag(date)
+      task.flagged = false // TODO: flag depends on prefs
+      task.removeTags(schedulingLib.getSchedulingTag().children)
+      task.addTag(dateTag)
+    }
   }
 
   schedulingLib.makeToday = (tag) => {
