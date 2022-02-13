@@ -1,4 +1,4 @@
-/* global PlugIn Version Formatter flattenedTags Tag Calendar */
+/* global PlugIn Version Formatter flattenedTags Tag Calendar moveTags */
 (() => {
   const schedulingLib = new PlugIn.Library(new Version('1.0'))
 
@@ -25,26 +25,35 @@
 
   schedulingLib.getSchedulingTag = () => {
     // TODO: Prompt for tag if it doesn't already exist - and use synced prefs for this
-    return flattenedTags.byName('Scheduled')
+    return flattenedTags.byName('Scheduling')
   }
 
   schedulingLib.getTag = (date) => {
     const dateString = schedulingLib.getDateString(date)
     const parent = schedulingLib.getSchedulingTag()
-    const tag = parent.children.find(tag => tag.name.includes(dateString)) || new Tag(schedulingLib.getString(date), parent)
-    return tag
 
-    // if tag does not exist
-    // TODO: deal with existing tags that are not in this format?
-    // TODO: sort tags by date
+    const createTag = date => {
+      const tag = new Tag(schedulingLib.getString(date), parent)
+      schedulingLib.sortDateTags()
+      return tag
+    }
+
+    const tag = parent.children.find(tag => tag.name.includes(dateString)) || createTag(date)
+    return tag
   }
 
   schedulingLib.sortDateTags = () => {
     // TODO: implement this
+    const parent = schedulingLib.getSchedulingTag()
+    const sortedTags = parent.children.sort((a, b) => { return schedulingLib.getDate(a) - schedulingLib.getDate(b) })
+    moveTags(sortedTags, parent)
   }
 
   schedulingLib.getDate = (tag) => {
     // TODO: implement this
+    const formatter = schedulingLib.getDateFormatter()
+    const date = formatter.dateFromString(tag.name)
+    return date
   }
 
   return schedulingLib
