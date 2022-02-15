@@ -12,8 +12,10 @@
   }
 
   schedulingLib.getString = (date) => {
+    const startOfToday = Calendar.current.startOfDay(new Date())
+    const startOfDate = Calendar.current.startOfDay(date)
     const dateString = schedulingLib.getDateString(date)
-    const daysFromToday = Calendar.current.dateComponentsBetweenDates(new Date(), date).day
+    const daysFromToday = Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
     if (daysFromToday >= 7) return dateString
     if (daysFromToday === 1) return `Tomorrow (${dateString})`
     if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
@@ -29,19 +31,20 @@
     return flattenedTags.byName('Scheduling')
   }
 
+  schedulingLib.createTag = date => {
+    const parent = schedulingLib.getSchedulingTag()
+    const tag = new Tag(schedulingLib.getString(date), parent)
+    schedulingLib.sortDateTags()
+    return tag
+  }
+
   schedulingLib.getTag = (date) => {
     const dateString = schedulingLib.getDateString(date)
     const parent = schedulingLib.getSchedulingTag()
 
     if (dateString === null) return null // date is today and not using today tag TODO: allow today tag to be set via pref
 
-    const createTag = date => {
-      const tag = new Tag(schedulingLib.getString(date), parent)
-      schedulingLib.sortDateTags()
-      return tag
-    }
-
-    const tag = parent.children.find(tag => tag.name.includes(dateString)) || createTag(date)
+    const tag = parent.children.find(tag => tag.name.includes(dateString)) || schedulingLib.createTag(date)
     return tag
   }
 
@@ -88,6 +91,15 @@
       if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday(tag)
       else break
     }
+    // make sure 'Tomorrow' tag exists and is correct date
+    const timeToAdd = new DateComponents()
+    timeToAdd.day = 1
+    const tomorrow = Calendar.current.dateByAddingDateComponents(new Date(), timeToAdd)
+    const tomorrowTag = schedulingLib.getTag(tomorrow)
+    if (tomorrowTag !== null) tomorrowTag.name = schedulingLib.getString(tomorrow)
+    else schedulingLib.createTag(tomorrow)
+
+    // TODO: make sure remaining week tags exist and are correct date
   }
 
   return schedulingLib
