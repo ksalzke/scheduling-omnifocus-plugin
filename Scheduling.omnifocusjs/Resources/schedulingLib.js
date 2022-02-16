@@ -16,7 +16,7 @@
     const startOfDate = Calendar.current.startOfDay(date)
     const dateString = schedulingLib.getDateString(date)
     const daysFromToday = Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
-    if (daysFromToday >= 7) return dateString
+    if (daysFromToday > 7) return dateString
     if (daysFromToday === 1) return `Tomorrow (${dateString})`
     if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
 
@@ -91,15 +91,17 @@
       if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday(tag)
       else break
     }
-    // make sure 'Tomorrow' tag exists and is correct date
-    const timeToAdd = new DateComponents()
-    timeToAdd.day = 1
-    const tomorrow = Calendar.current.dateByAddingDateComponents(new Date(), timeToAdd)
-    const tomorrowTag = schedulingLib.getTag(tomorrow)
-    if (tomorrowTag !== null) tomorrowTag.name = schedulingLib.getString(tomorrow)
-    else schedulingLib.createTag(tomorrow)
+    // make sure 'Tomorrow' and remaining week tags exists and are named correctly
+    for (let i = 1; i <= 7; i++) {
+      console.log('day ' + i )
+      const daysToAdd = new DateComponents()
+      daysToAdd.day = i
+      const date = Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd)
+      const dayTag = schedulingLib.getTag(date)
+      if (dayTag !== null) dayTag.name = schedulingLib.getString(date)
+      else schedulingLib.createTag(date)
+    } 
 
-    // TODO: make sure remaining week tags exist and are correct date
   }
 
   return schedulingLib
