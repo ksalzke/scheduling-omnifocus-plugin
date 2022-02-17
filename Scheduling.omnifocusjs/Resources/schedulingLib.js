@@ -11,11 +11,15 @@
     return formatter.stringFromDate(date)
   }
 
-  schedulingLib.getString = (date) => {
+  schedulingLib.daysFromToday = (date) => {
     const startOfToday = Calendar.current.startOfDay(new Date())
     const startOfDate = Calendar.current.startOfDay(date)
+    return Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
+  }
+
+  schedulingLib.getString = (date) => {
     const dateString = schedulingLib.getDateString(date)
-    const daysFromToday = Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
+    const daysFromToday = schedulingLib.daysFromToday(date)
     if (daysFromToday > 7) return dateString
     if (daysFromToday === 1) return `Tomorrow (${dateString})`
     if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
@@ -101,6 +105,12 @@
       if (dayTag !== null) dayTag.name = schedulingLib.getString(date)
       else schedulingLib.createTag(date)
     } 
+
+    // Remove future date tags with no remaining tasks
+    for (const tag of schedulingLib.getSchedulingTag().children) {
+      const date = schedulingLib.getDate(tag)
+      if (schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
+    }
 
   }
 
