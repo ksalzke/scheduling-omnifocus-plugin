@@ -17,6 +17,11 @@
     return Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
   }
 
+  schedulingLib.getDayOfWeek = (date) => {
+    const dayFormatter = Formatter.Date.withFormat('EEEE')
+    return dayFormatter.stringFromDate(date)
+  }
+
   schedulingLib.getString = (date) => {
     const dateString = schedulingLib.getDateString(date)
     const daysFromToday = schedulingLib.daysFromToday(date)
@@ -25,8 +30,7 @@
     if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
 
     // otherwise, date is in next 7 days - include day of week
-    const dayFormatter = Formatter.Date.withFormat('EEEE')
-    const dayString = dayFormatter.stringFromDate(date)
+    const dayString = schedulingLib.getDayOfWeek(date)
     return `${dayString} (${dateString})`
   }
 
@@ -38,7 +42,7 @@
   schedulingLib.createTag = date => {
     const parent = schedulingLib.getSchedulingTag()
     const tag = new Tag(schedulingLib.getString(date), parent)
-    schedulingLib.sortDateTags()
+    schedulingLib.recreateTagOrder()
     return tag
   }
 
@@ -52,12 +56,6 @@
     return tag
   }
 
-  schedulingLib.sortDateTags = () => {
-    const parent = schedulingLib.getSchedulingTag()
-    const sortedTags = parent.children.sort((a, b) => { return schedulingLib.getDate(a) - schedulingLib.getDate(b) })
-    moveTags(sortedTags, parent)
-  }
-
   schedulingLib.getDate = (tag) => {
     const formatter = schedulingLib.getDateFormatter()
     const date = formatter.dateFromString(tag.name)
@@ -65,8 +63,6 @@
   }
 
   schedulingLib.isToday = (date) => {
-    console.log(Calendar.current.startOfDay(date).getTime())
-    console.log(Calendar.current.startOfDay(new Date()).getTime())
     return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
   }
 
@@ -86,30 +82,49 @@
     deleteObject(tag)
   }
 
-  schedulingLib.updateTags = () => {
-    // sort tags
-    schedulingLib.sortDateTags()
+  schedulingLib.recreateTagOrder = () => {
+    const schedulingTag = schedulingLib.getSchedulingTag()
+    const schedulingTags = schedulingTag.children
+    const orderedTags = []
 
     // move any tags from the past into 'Today'
-    for (const tag of schedulingLib.getSchedulingTag().children) {
-      if (schedulingLib.getDate(tag) < new Date()) schedulingLib.makeToday(tag)
+    for (const tag of schedulingTags) {
+      const date = schedulingLib.getDate(tag)
+      if (date !== null && date < new Date()) schedulingLib.makeToday(tag)
       else break
     }
+
     // make sure 'Tomorrow' and remaining week tags exists and are named correctly
     for (let i = 1; i <= 7; i++) {
-      console.log('day ' + i )
       const daysToAdd = new DateComponents()
       daysToAdd.day = i
       const date = Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd)
-      const dayTag = schedulingLib.getTag(date)
-      if (dayTag !== null) dayTag.name = schedulingLib.getString(date)
-      else schedulingLib.createTag(date)
-    } 
+
+      // add/rename date-specific tag
+      const dayTag = schedulingLib.getTag(date) || schedulingLib.createTag(date)
+      dayTag.name = schedulingLib.getString(date)
+      orderedTags.push(dayTag)
+
+      // add/rename weekday tag TODO: make optional
+      const weekday = schedulingLib.getDayOfWeek(date)
+      const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`)
+      orderedTags.push(weekdayTag)
+    }
+    
+    const futureTags = schedulingTags.filter(tag => !orderedTags.includes(tag))
+    const sortedFutureTags = futureTags.sort((a, b) => schedulingLib.getDate(a) - schedulingLib.getDate(b) )
+    const sorted = orderedTags.concat(sortedFutureTags)
+
+    moveTags(sorted, schedulingTag)
+  }
+
+  schedulingLib.updateTags = () => {
+    schedulingLib.recreateTagOrder()
 
     // Remove future date tags with no remaining tasks
     for (const tag of schedulingLib.getSchedulingTag().children) {
       const date = schedulingLib.getDate(tag)
-      if (schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
+      if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
 
   }
