@@ -2,6 +2,21 @@
 (() => {
   const schedulingLib = new PlugIn.Library(new Version('1.0'))
 
+  schedulingLib.loadSyncedPrefs = () => {
+    const syncedPrefsPlugin = PlugIn.find('com.KaitlinSalzke.SyncedPrefLibrary')
+
+    if (syncedPrefsPlugin !== null) {
+      const SyncedPref = syncedPrefsPlugin.library('syncedPrefLibrary').SyncedPref
+      return new SyncedPref('com.KaitlinSalzke.Scheduling')
+    } else {
+      const alert = new Alert(
+        'Synced Preferences Library Required',
+        'For the Scheduling plug-in to work correctly, the \'Synced Preferences for OmniFocus\' plug-in (https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately. Either you do not currently have this plugin installed, or it is not installed correctly.'
+      )
+      alert.show()
+    }
+  }
+
   schedulingLib.getDateFormatter = () => {
     return Formatter.Date.withStyle(Formatter.Date.Style.Medium)
   }
@@ -112,6 +127,12 @@
   }
 
   schedulingLib.updateTags = () => {
+
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const lastUpdated = syncedPrefs.readDate('lastUpdated')
+
+    // TODO: combine into one 'for' loop
+
     // move any tags from the past into 'Today'
     for (const tag of schedulingLib.getSchedulingTag().children) {
       const date = schedulingLib.getDate(tag)
@@ -123,14 +144,20 @@
       const date = schedulingLib.getDate(tag)
       if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
-
+    
+    // weekdays - make current days current, note in synced prefs when last updated // TODO: only if available
+    for (const tag of schedulingLib.getSchedulingTag().children) { // TODO: make optional
+      if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
+        const weekday = schedulingLib.getDayOfWeek(new Date())
+        const weekdayTag = schedulingLib.getSchedulingTag().children.byName(`${weekday}s`) // TODO: use schedulingTags const
+        console.log(weekdayTag)
+        for (const task of weekdayTag.tasks) task.flagged = true // TODO: flag/tag depends on prefs
+      }
+    }
 
     schedulingLib.recreateTagOrder()
 
-    // TODO: weekdays - make current days current, note in synced prefs when last updated
-
-
-
+    syncedPrefs.write('lastUpdated', new Date())
   }
 
   return schedulingLib
