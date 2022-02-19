@@ -150,8 +150,15 @@
       if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
         const weekday = schedulingLib.getDayOfWeek(new Date())
         const weekdayTag = schedulingLib.getSchedulingTag().children.byName(`${weekday}s`) // TODO: use schedulingTags const
-        console.log(weekdayTag)
-        for (const task of weekdayTag.tasks) task.flagged = true // TODO: flag/tag depends on prefs
+        
+        // get start of tomorrow
+        const daysToAdd = new DateComponents()
+        daysToAdd.day = 1
+        const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
+        
+        for (const task of weekdayTag.tasks) {
+          if (task.effectiveDeferDate < startOfTomorrow) task.flagged = true // TODO: flag/tag depends on prefs TODO: if defer date is before tomorrow
+        }
       }
     }
 
