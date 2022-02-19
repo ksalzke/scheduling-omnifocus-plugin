@@ -56,25 +56,35 @@
     return `${dayString} (${dateString})`
   }
 
-  schedulingLib.getSchedulingTag = () => {
-    // TODO: Prompt for tag if it doesn't already exist - and use synced prefs for this
-    return flattenedTags.byName('Scheduling')
+  schedulingLib.schedulingTag = () => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const schedulingTagID = syncedPrefs.read('schedulingTagID')
+    if (schedulingTagID === null) return null
+    else return Tag.byIdentifier(schedulingTagID)
   }
 
-  schedulingLib.createTag = date => {
-    const parent = schedulingLib.getSchedulingTag()
+  schedulingLib.getSchedulingTag = async () => {
+    const schedulingTag = schedulingLib.schedulingTag()
+    if (schedulingTag !== null) return schedulingTag
+
+    // not set - show preferences pane and then try again)
+    await this.action('preferences').perform()
+    return await schedulingLib.getSchedulingTag()
+  }
+
+  schedulingLib.createTag = async date => {
+    const parent = await schedulingLib.getSchedulingTag()
     const tag = new Tag(schedulingLib.getString(date), parent)
-    schedulingLib.recreateTagOrder()
+    await schedulingLib.recreateTagOrder()
     return tag
   }
 
-  schedulingLib.getTag = (date) => {
+  schedulingLib.getTag = async (date) => {
     const dateString = schedulingLib.getDateString(date)
-    const parent = schedulingLib.getSchedulingTag()
-
     if (dateString === null) return schedulingLib.todayTag()
 
-    const tag = parent.children.find(tag => tag.name.includes(dateString)) || schedulingLib.createTag(date)
+    const parent = await schedulingLib.getSchedulingTag()
+    const tag = parent.children.find(tag => tag.name.includes(dateString)) || await schedulingLib.createTag(date)
     return tag
   }
 
@@ -88,12 +98,19 @@
     return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
   }
 
-  schedulingLib.rescheduleTask = (task, date) => {
+  schedulingLib.rescheduleTask = async (task, date) => {
     if (schedulingLib.isToday(date)) schedulingLib.addToToday(task)
     else {
-      const dateTag = schedulingLib.getTag(date)
+      // unflag task
       task.flagged = false // TODO: flag depends on prefs
-      task.removeTags(schedulingLib.getSchedulingTag().children)
+
+      // remove old tags
+      const schedulingTag = await schedulingLib.getSchedulingTag()
+      const schedulingTags = schedulingTag.children
+      task.removeTags(schedulingTags)
+
+      // add new tag
+      const dateTag = await schedulingLib.getTag(date)
       task.addTag(dateTag)
     }
   }
@@ -110,8 +127,8 @@
     deleteObject(tag)
   }
 
-  schedulingLib.recreateTagOrder = () => {
-    const schedulingTag = schedulingLib.getSchedulingTag()
+  schedulingLib.recreateTagOrder = async () => {
+    const schedulingTag = await schedulingLib.getSchedulingTag()
     const schedulingTags = schedulingTag.children
     const orderedTags = []
 
@@ -122,7 +139,7 @@
       const date = Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd)
 
       // add/rename date-specific tag
-      const dayTag = schedulingLib.getTag(date) || schedulingLib.createTag(date)
+      const dayTag = await schedulingLib.getTag(date) || await schedulingLib.createTag(date)
       dayTag.name = schedulingLib.getString(date)
       orderedTags.push(dayTag)
 
@@ -139,41 +156,38 @@
     moveTags(sorted, schedulingTag)
   }
 
-  schedulingLib.updateTags = () => {
+  schedulingLib.updateTags = async () => {
 
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const lastUpdated = syncedPrefs.readDate('lastUpdated')
 
-    // TODO: combine into one 'for' loop
+    const schedulingTag = await schedulingLib.getSchedulingTag()
+    const schedulingTags = schedulingTag.children
 
-    // move any tags from the past into 'Today'
-    for (const tag of schedulingLib.getSchedulingTag().children) {
+    for (const tag of schedulingTags) {
       const date = schedulingLib.getDate(tag)
+
+      // move any tags from the past into 'Today'
       if (date !== null && date <= new Date()) schedulingLib.makeToday(tag)
+
+      // remove future date tags with no remaining tasks
+      else if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
 
-    // Remove future date tags with no remaining tasks
-    for (const tag of schedulingLib.getSchedulingTag().children) {
-      const date = schedulingLib.getDate(tag)
-      if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
-    }
-    
-    // weekdays - make current days current, note in synced prefs when last updated
-    for (const tag of schedulingLib.getSchedulingTag().children) { // TODO: make optional
-      if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
-        const weekday = schedulingLib.getDayOfWeek(new Date())
-        const weekdayTag = schedulingLib.getSchedulingTag().children.byName(`${weekday}s`) // TODO: use schedulingTags const
+    // weekdays - make current days current, note in synced prefs when last updated // TODO: make optional
+    if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
+      const weekday = schedulingLib.getDayOfWeek(new Date())
+      const weekdayTag = schedulingTags.byName(`${weekday}s`)
         
-        // get start of tomorrow
-        const daysToAdd = new DateComponents()
-        daysToAdd.day = 1
-        const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
+      // get start of tomorrow
+      const daysToAdd = new DateComponents()
+      daysToAdd.day = 1
+      const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
         
         for (const task of weekdayTag.tasks) if (task.effectiveDeferDate < startOfTomorrow) schedulingLib.addToToday(task)
-      }
     }
 
-    schedulingLib.recreateTagOrder()
+    await schedulingLib.recreateTagOrder()
 
     syncedPrefs.write('lastUpdated', new Date())
   }

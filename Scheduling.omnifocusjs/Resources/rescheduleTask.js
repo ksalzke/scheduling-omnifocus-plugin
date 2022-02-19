@@ -10,7 +10,7 @@
 
     await form.show('Reschedule to...', 'Reschedule') // TODO: Use 'schedule' if not already scheduled
 
-    for (const task of selection.tasks) lib.rescheduleTask(task, form.values.date)
+    for (const task of selection.tasks) await lib.rescheduleTask(task, form.values.date)
   })
 
   action.validate = function (selection, sender) {

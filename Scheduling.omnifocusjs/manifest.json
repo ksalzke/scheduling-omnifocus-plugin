@@ -5,13 +5,10 @@
   "description": "A series of scripts to assist with scheduling in OmniFocus.",
   "version": "1.0.0",
   "actions": [
-    { "identifier": "rescheduleTask",
-    "image": "calendar.badge.plus" },
+    { "identifier": "rescheduleTask", "image": "calendar.badge.plus" },
     { "identifier": "tagDueTasks" },
-    { "identifier": "newDay",
-    "image": "sun.max" },
+    { "identifier": "newDay", "image": "sun.max" },
     { "identifier": "preferences", "image": "gear" }
   ],
-  "libraries": [{ "identifier": "schedulingConfig" },
-                { "identifier": "schedulingLib" }]
+  "libraries": [{ "identifier": "schedulingLib" }]
 }
