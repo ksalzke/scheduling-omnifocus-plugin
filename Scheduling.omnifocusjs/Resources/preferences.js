@@ -19,7 +19,7 @@
     await form.show('Preferences: Agendas', 'OK')
 
     // save preferences
-    if (form.values.todayTag) syncedPrefs.write('todayTagID', form.values.todayTag.id.primaryKey) 
+    if (form.values.todayTag) syncedPrefs.write('todayTagID', form.values.todayTag.id.primaryKey)
     else syncedPrefs.write('todayTagID', null)
     syncedPrefs.write('flagToday', form.values.flagToday)
     syncedPrefs.write('schedulingTagID', form.values.schedulingTag.id.primaryKey)

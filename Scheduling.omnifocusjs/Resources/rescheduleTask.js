@@ -6,7 +6,7 @@
     const form = new Form()
 
     form.addField(new Form.Field.Date('date', 'Date', null, lib.getDateFormatter()))
-    form.validate = (form) => {return form.values.date && (lib.isAfterToday(form.values.date) || lib.isToday(form.values.date))}
+    form.validate = (form) => form.values.date && (lib.isAfterToday(form.values.date) || lib.isToday(form.values.date))
 
     await form.show('Reschedule to...', 'Reschedule') // TODO: Use 'schedule' if not already scheduled
 
