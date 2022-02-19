@@ -87,13 +87,6 @@
     const schedulingTags = schedulingTag.children
     const orderedTags = []
 
-    // move any tags from the past into 'Today'
-    for (const tag of schedulingTags) {
-      const date = schedulingLib.getDate(tag)
-      if (date !== null && date < new Date()) schedulingLib.makeToday(tag)
-      else break
-    }
-
     // make sure 'Tomorrow' and remaining week tags exists and are named correctly
     for (let i = 1; i <= 7; i++) {
       const daysToAdd = new DateComponents()
@@ -119,13 +112,24 @@
   }
 
   schedulingLib.updateTags = () => {
-    schedulingLib.recreateTagOrder()
+    // move any tags from the past into 'Today'
+    for (const tag of schedulingLib.getSchedulingTag().children) {
+      const date = schedulingLib.getDate(tag)
+      if (date !== null && date <= new Date()) schedulingLib.makeToday(tag)
+    }
 
     // Remove future date tags with no remaining tasks
     for (const tag of schedulingLib.getSchedulingTag().children) {
       const date = schedulingLib.getDate(tag)
       if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
+
+
+    schedulingLib.recreateTagOrder()
+
+    // TODO: weekdays - make current days current, note in synced prefs when last updated
+
+
 
   }
 
