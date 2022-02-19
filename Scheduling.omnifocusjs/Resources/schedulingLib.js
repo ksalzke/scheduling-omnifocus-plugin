@@ -49,7 +49,7 @@
     const daysFromToday = schedulingLib.daysFromToday(date)
     if (daysFromToday > 7) return dateString
     if (daysFromToday === 1) return `Tomorrow (${dateString})`
-    if (daysFromToday === 0) return null // TODO: Get from prefs if applicable
+    if (daysFromToday === 0) return null
 
     // otherwise, date is in next 7 days - include day of week
     const dayString = schedulingLib.getDayOfWeek(date)
@@ -72,7 +72,7 @@
     const dateString = schedulingLib.getDateString(date)
     const parent = schedulingLib.getSchedulingTag()
 
-    if (dateString === null) return null // date is today and not using today tag TODO: allow today tag to be set via pref
+    if (dateString === null) return schedulingLib.todayTag()
 
     const tag = parent.children.find(tag => tag.name.includes(dateString)) || schedulingLib.createTag(date)
     return tag
@@ -89,7 +89,7 @@
   }
 
   schedulingLib.rescheduleTask = (task, date) => {
-    if (schedulingLib.isToday(date)) task.flagged = true
+    if (schedulingLib.isToday(date)) schedulingLib.addToToday(task)
     else {
       const dateTag = schedulingLib.getTag(date)
       task.flagged = false // TODO: flag depends on prefs
@@ -98,9 +98,15 @@
     }
   }
 
+  schedulingLib.addToToday = (task) => {
+    task.flagged = true // TODO: depend on prefs
+
+    const todayTag = schedulingLib.todayTag()
+    if (todayTag !== null) task.addTag(todayTag)
+  }
+
   schedulingLib.makeToday = (tag) => {
-    // TODO: add flag/tag option
-    for (const task of tag.tasks) task.flagged = true
+    for (const task of tag.tasks) schedulingLib.addToToday(task)
     deleteObject(tag)
   }
 
@@ -152,7 +158,7 @@
       if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
     
-    // weekdays - make current days current, note in synced prefs when last updated // TODO: only if available
+    // weekdays - make current days current, note in synced prefs when last updated
     for (const tag of schedulingLib.getSchedulingTag().children) { // TODO: make optional
       if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
         const weekday = schedulingLib.getDayOfWeek(new Date())
@@ -163,9 +169,7 @@
         daysToAdd.day = 1
         const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
         
-        for (const task of weekdayTag.tasks) {
-          if (task.effectiveDeferDate < startOfTomorrow) task.flagged = true // TODO: flag/tag depends on prefs TODO: if defer date is before tomorrow
-        }
+        for (const task of weekdayTag.tasks) if (task.effectiveDeferDate < startOfTomorrow) schedulingLib.addToToday(task)
       }
     }
 
