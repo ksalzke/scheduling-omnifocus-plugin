@@ -1,4 +1,4 @@
-/* global PlugIn Version Formatter flattenedTags Tag Calendar moveTags deleteObject */
+/* global PlugIn Version Formatter Tag Calendar moveTags deleteObject Alert DateComponents */
 (() => {
   const schedulingLib = new PlugIn.Library(new Version('1.0'))
 
@@ -108,14 +108,20 @@
   }
 
   schedulingLib.rescheduleTask = async (task, date) => {
-    if (schedulingLib.isToday(date)) schedulingLib.addToToday(task)
-    else {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const schedulingTag = await schedulingLib.getSchedulingTag()
+    const schedulingTags = schedulingTag.children
+
+    if (schedulingLib.isToday(date)) {
+      // flag/tag as appropriate
+      schedulingLib.addToToday(task)
+      // remove old tags
+      task.removeTags(schedulingTags)
+    } else {
       // unflag task
-      task.flagged = false // TODO: flag depends on prefs
+      if (syncedPrefs.readBoolean('flagToday')) task.flagged = false
 
       // remove old tags
-      const schedulingTag = await schedulingLib.getSchedulingTag()
-      const schedulingTags = schedulingTag.children
       task.removeTags(schedulingTags)
 
       // add new tag
@@ -125,7 +131,8 @@
   }
 
   schedulingLib.addToToday = (task) => {
-    task.flagged = true // TODO: depend on prefs
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    if (syncedPrefs.readBoolean('flagToday')) task.flagged = true
 
     const todayTag = schedulingLib.todayTag()
     if (todayTag !== null) task.addTag(todayTag)
@@ -157,16 +164,15 @@
       const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`)
       orderedTags.push(weekdayTag)
     }
-    
+
     const futureTags = schedulingTags.filter(tag => !orderedTags.includes(tag))
-    const sortedFutureTags = futureTags.sort((a, b) => schedulingLib.getDate(a) - schedulingLib.getDate(b) )
+    const sortedFutureTags = futureTags.sort((a, b) => schedulingLib.getDate(a) - schedulingLib.getDate(b))
     const sorted = orderedTags.concat(sortedFutureTags)
 
     moveTags(sorted, schedulingTag)
   }
 
   schedulingLib.updateTags = async () => {
-
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const lastUpdated = syncedPrefs.readDate('lastUpdated')
 
@@ -187,8 +193,8 @@
     if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
       const weekday = schedulingLib.getDayOfWeek(new Date())
       const weekdayTag = schedulingTags.byName(`${weekday}s`)
-        
-        for (const task of weekdayTag.tasks) if (!schedulingLib.isAfterToday(task.effectiveDeferDate)) schedulingLib.addToToday(task)
+
+      for (const task of weekdayTag.tasks) if (!schedulingLib.isAfterToday(task.effectiveDeferDate)) schedulingLib.addToToday(task)
     }
 
     await schedulingLib.recreateTagOrder()
