@@ -56,6 +56,15 @@
     return `${dayString} (${dateString})`
   }
 
+  schedulingLib.isAfterToday = (date) => {
+    // get start of tomorrow
+    const daysToAdd = new DateComponents()
+    daysToAdd.day = 1
+    const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
+
+    return date >= startOfTomorrow
+  }
+
   schedulingLib.schedulingTag = () => {
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const schedulingTagID = syncedPrefs.read('schedulingTagID')
@@ -179,12 +188,7 @@
       const weekday = schedulingLib.getDayOfWeek(new Date())
       const weekdayTag = schedulingTags.byName(`${weekday}s`)
         
-      // get start of tomorrow
-      const daysToAdd = new DateComponents()
-      daysToAdd.day = 1
-      const startOfTomorrow = Calendar.current.startOfDay(Calendar.current.dateByAddingDateComponents(new Date(), daysToAdd))
-        
-        for (const task of weekdayTag.tasks) if (task.effectiveDeferDate < startOfTomorrow) schedulingLib.addToToday(task)
+        for (const task of weekdayTag.tasks) if (!schedulingLib.isAfterToday(task.effectiveDeferDate)) schedulingLib.addToToday(task)
     }
 
     await schedulingLib.recreateTagOrder()
