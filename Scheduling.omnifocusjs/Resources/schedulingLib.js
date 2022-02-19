@@ -17,6 +17,13 @@
     }
   }
 
+  schedulingLib.todayTag = () => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const todayTagID = syncedPrefs.read('todayTagID')
+    if (todayTagID === null) return null
+    else return Tag.byIdentifier(todayTagID)
+  }
+
   schedulingLib.getDateFormatter = () => {
     return Formatter.Date.withStyle(Formatter.Date.Style.Medium)
   }

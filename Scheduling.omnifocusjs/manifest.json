@@ -9,7 +9,8 @@
     "image": "calendar.badge.plus" },
     { "identifier": "tagDueTasks" },
     { "identifier": "newDay",
-    "image": "sun.max" }
+    "image": "sun.max" },
+    { "identifier": "preferences", "image": "gear" }
   ],
   "libraries": [{ "identifier": "schedulingConfig" },
                 { "identifier": "schedulingLib" }]
