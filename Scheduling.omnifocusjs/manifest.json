@@ -7,7 +7,7 @@
   "actions": [
     { "identifier": "rescheduleTask", "image": "calendar.badge.plus" },
     { "identifier": "tagDueTasks" },
-    { "identifier": "newDay", "image": "sun.max" },
+    { "identifier": "updateSchedule", "image": "sun.max" },
     { "identifier": "preferences", "image": "gear" }
   ],
   "libraries": [{ "identifier": "schedulingLib" }]
