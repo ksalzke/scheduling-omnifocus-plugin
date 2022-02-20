@@ -161,8 +161,8 @@
 
       // add/rename weekday tag TODO: make optional
       const weekday = schedulingLib.getDayOfWeek(date)
-      const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`)
-      orderedTags.push(weekdayTag)
+        const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`, schedulingTag)
+        orderedTags.push(weekdayTag)
     }
 
     const futureTags = schedulingTags.filter(tag => !orderedTags.includes(tag))
