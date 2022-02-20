@@ -15,7 +15,7 @@
     todayTagField.allowsNull = true
     form.addField(todayTagField)
     form.addField(new Form.Field.Option('schedulingTag', 'Scheduling tag', flattenedTags, tagNames, schedulingTag, 'Please select a tag'))
-    form.addField(new Form.Field.Checkbox('flagToday', 'Flag \'Today\' tasks', flagToday))
+    form.addField(new Form.Field.Checkbox('flagToday', 'Flag denotes \'Today\' tasks', flagToday))
     await form.show('Preferences: Agendas', 'OK')
 
     // save preferences
