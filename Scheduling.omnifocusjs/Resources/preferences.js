@@ -7,6 +7,7 @@
     const schedulingTag = this.schedulingLib.schedulingTag()
     const todayTag = this.schedulingLib.todayTag()
     const flagToday = syncedPrefs.readBoolean('flagToday')
+    const useWeekdays = syncedPrefs.readBoolean('useWeekdays')
 
     // create and show form
     const form = new Form()
@@ -19,6 +20,8 @@
     form.addField(todayTagField)
 
     form.addField(new Form.Field.Checkbox('flagToday', 'Flag denotes \'Today\' tasks', flagToday))
+
+    form.addField(new Form.Field.Checkbox('useWeekdays', 'Use recurring weekday-based scheduling', useWeekdays))
     
     await form.show('Preferences: Agendas', 'OK')
 
@@ -27,6 +30,7 @@
     else syncedPrefs.write('todayTagID', null)
     syncedPrefs.write('flagToday', form.values.flagToday)
     syncedPrefs.write('schedulingTagID', form.values.schedulingTag.id.primaryKey)
+    syncedPrefs.write('useWeekdays', form.values.useWeekdays)
   })
 
   action.validate = function (selection, sender) {

@@ -144,6 +144,7 @@
   }
 
   schedulingLib.recreateTagOrder = async () => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const schedulingTag = await schedulingLib.getSchedulingTag()
     const schedulingTags = schedulingTag.children
     const orderedTags = []
@@ -159,10 +160,12 @@
       dayTag.name = schedulingLib.getString(date)
       orderedTags.push(dayTag)
 
-      // add/rename weekday tag TODO: make optional
-      const weekday = schedulingLib.getDayOfWeek(date)
+      // add/rename weekday tag if using weekdays
+      if (syncedPrefs.readBoolean('useWeekdays')) {
+        const weekday = schedulingLib.getDayOfWeek(date)
         const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`, schedulingTag)
         orderedTags.push(weekdayTag)
+      }
     }
 
     const futureTags = schedulingTags.filter(tag => !orderedTags.includes(tag))
@@ -189,8 +192,8 @@
       else if (date !== null && schedulingLib.daysFromToday(date) > 7 && tag.remainingTasks.length === 0) deleteObject(tag)
     }
 
-    // weekdays - make current days current, note in synced prefs when last updated // TODO: make optional
-    if (lastUpdated === null || !schedulingLib.isToday(lastUpdated)) {
+    // weekdays - make current days current, note in synced prefs when last updated - if using weekdays
+    if (syncedPrefs.readBoolean('useWeekdays') && (lastUpdated === null || !schedulingLib.isToday(lastUpdated))) {
       const weekday = schedulingLib.getDayOfWeek(new Date())
       const weekdayTag = schedulingTags.byName(`${weekday}s`)
 
