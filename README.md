@@ -37,7 +37,7 @@ This action can be run when one or more tasks are selected.
 
 It prompts the user to enter a date (which may use Omni's [shorthand date terminology](https://omni-automation.com/shared/formatter-date.html)) and 'reschedules' the task to that date by assigning a tag.
 
-TODO: add screenshot
+![Rescheduling a task](https://user-images.githubusercontent.com/16893787/155266319-deff7fd7-b6a2-4a4a-a94e-4dd7221b0bc3.png)
 
 ## Update Schedule
 
@@ -45,7 +45,7 @@ This action can be run at any time. You may wish to run this in the background o
 
 It runs the `updateTags()` function from the library (described in detail below), which moves any tasks scheduled for today (or the past) to today, by applying a flag and/or assigning a tag (as determined by the user's preferences.) It also updates the tag order and removes any tags that are more than a week in the future and do not have any remaining tasks assigned to them.
 
-TODO: Add screenshot
+![Ordered tags](https://user-images.githubusercontent.com/16893787/155266369-6d5c59a7-c0bd-46d0-a104-ddfbb86abec1.png)
 
 ## Preferences: Scheduling
 
@@ -139,9 +139,7 @@ Moves all of the tasks from a tag to today by running `addToToday` on each of it
 
 ## `recreateTagOrder ()`
 
-**Asynchronous.** Re-orders the scheduling tags (and renames them if necessary), in an order similar to the below:
-
-TODO: insert screenshot
+**Asynchronous.** Re-orders the scheduling tags (and renames them if necessary), in an order similar to that shown at the 'Update Tags' action above.
 
 ## `updateTags ()`
 
