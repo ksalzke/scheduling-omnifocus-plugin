@@ -107,6 +107,17 @@
     return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
   }
 
+  schedulingLib.promptAndReschedule = async (tasks) => {
+    const form = new Form()
+
+    form.addField(new Form.Field.Date('date', 'Date', null, schedulingLib.getDateFormatter()))
+    form.validate = (form) => form.values.date && (schedulingLib.isAfterToday(form.values.date) || schedulingLib.isToday(form.values.date))
+
+    await form.show('(Re)schedule to...', '(Re)schedule')
+
+    for (const task of tasks) await schedulingLib.rescheduleTask(task, form.values.date)
+  }
+
   schedulingLib.rescheduleTask = async (task, date) => {
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const schedulingTag = await schedulingLib.getSchedulingTag()

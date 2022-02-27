@@ -125,6 +125,14 @@ Returns the date for a given tag. If no date can be parsed, returns null.
 
 Returns true if the given date is today; otherwise, returns false.
 
+## `promptAndReschedule (tasks: Array<Task>)`
+
+**Asynchronous.** 'Reschedules' the given task to the specified date by removing any existing 'scheduling' tags, and adding the tag for the given day.
+
+Prompts the user to enter a date (which may use Omni's [shorthand date terminology](https://omni-automation.com/shared/formatter-date.html)) and 'reschedules' the task to that date by assigning a tag.
+
+![Rescheduling a task](https://user-images.githubusercontent.com/16893787/155266319-deff7fd7-b6a2-4a4a-a94e-4dd7221b0bc3.png)
+
 ## `rescheduleTask (task: Task, date: Date)`
  
 **Asynchronous.** 'Reschedules' the given task to the specified date by removing any existing 'scheduling' tags, and adding the tag for the given day.
