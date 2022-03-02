@@ -44,6 +44,12 @@
     return dayFormatter.stringFromDate(date)
   }
 
+  schedulingLib.getWeekdayTag = async (date) => {
+    const tagName = `${schedulingLib.getDayOfWeek(date)}s`
+    const schedulingTag = await schedulingLib.getSchedulingTag()
+    return schedulingTag.tagNamed(tagName) || new Tag(tagName, schedulingTag)
+  }
+
   schedulingLib.getString = (date) => {
     const dateString = schedulingLib.getDateString(date)
     const daysFromToday = schedulingLib.daysFromToday(date)
@@ -103,9 +109,7 @@
     return date
   }
 
-  schedulingLib.isToday = (date) => {
-    return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
-  }
+  schedulingLib.isToday = (date) => return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
 
   schedulingLib.promptAndReschedule = async (tasks) => {
     const form = new Form()
@@ -173,8 +177,7 @@
 
       // add/rename weekday tag if using weekdays
       if (syncedPrefs.readBoolean('useWeekdays')) {
-        const weekday = schedulingLib.getDayOfWeek(date)
-        const weekdayTag = schedulingTags.byName(`${weekday}s`) || new Tag(`${weekday}s`, schedulingTag)
+        const weekdayTag = await schedulingLib.getWeekdayTag(date)
         orderedTags.push(weekdayTag)
       }
     }
@@ -205,9 +208,7 @@
 
     // weekdays - make current days current, note in synced prefs when last updated - if using weekdays
     if (syncedPrefs.readBoolean('useWeekdays') && (lastUpdated === null || !schedulingLib.isToday(lastUpdated))) {
-      const weekday = schedulingLib.getDayOfWeek(new Date())
-      const weekdayTag = schedulingTags.byName(`${weekday}s`)
-
+      const weekdayTag = await schedulingLib.getWeekdayTag(new Date())
       for (const task of weekdayTag.tasks) if (!schedulingLib.isAfterToday(task.effectiveDeferDate)) schedulingLib.addToToday(task)
     }
 

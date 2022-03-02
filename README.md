@@ -88,6 +88,10 @@ Returns the number of days between today and the given date.
 
 Returns the day of the week for the given date.
 
+## `getWeekdayTag (date: Date) : Tag`
+
+**Asynchronous.** Returns the 'weekday' tag for the given day of the week. e.g. if a Wednesday date is passed, returns (and creates if necessary) the scheduling tag named 'Wednesdays'. 
+
 ## `getString (date: Date) : String | null`
 
 Returns a string that is used as the tag name for the given date. This uses the user's "medium" format as selected in system settings, and depends on how far in the future the date is.
