@@ -109,7 +109,7 @@
     return date
   }
 
-  schedulingLib.isToday = (date) => return Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
+  schedulingLib.isToday = (date) => Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
 
   schedulingLib.promptAndReschedule = async (tasks) => {
     const form = new Form()
