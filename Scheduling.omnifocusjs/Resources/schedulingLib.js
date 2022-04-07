@@ -125,6 +125,7 @@
   schedulingLib.rescheduleTask = async (task, date) => {
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const schedulingTag = await schedulingLib.getSchedulingTag()
+    const todayTag = schedulingLib.todayTag()
     const schedulingTags = schedulingTag.children
 
     if (schedulingLib.isToday(date)) {
@@ -138,6 +139,7 @@
 
       // remove old tags
       task.removeTags(schedulingTags)
+      if (todayTag !== null) task.removeTag(todayTag)
 
       // add new tag
       const dateTag = await schedulingLib.getTag(date)
