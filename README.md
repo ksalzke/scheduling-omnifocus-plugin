@@ -84,6 +84,8 @@ Returns a string for the given date, based on the user's "medium" format selecte
 
 Returns the number of days between today and the given date.
 
+If the date is more than a month away, return Infinity. (In this context of this plug-in, we only care about values within a week.)
+
 ## `getDayOfWeek (date: Date) : String`
 
 Returns the day of the week for the given date.

@@ -36,7 +36,15 @@
   schedulingLib.daysFromToday = (date) => {
     const startOfToday = Calendar.current.startOfDay(new Date())
     const startOfDate = Calendar.current.startOfDay(date)
-    return Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate).day
+    const components = Calendar.current.dateComponentsBetweenDates(startOfToday, startOfDate)
+
+    // if the date is more than a month away, return Infinity
+    // in this context, we only care about values within a week
+    if (components.month > 0 || components.year > 0 || components.era > 0) {
+      return Infinity
+    }
+
+    return components.day
   }
 
   schedulingLib.getDayOfWeek = (date) => {
