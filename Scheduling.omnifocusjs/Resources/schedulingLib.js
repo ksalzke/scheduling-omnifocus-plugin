@@ -113,8 +113,14 @@
 
   schedulingLib.getDate = (tag) => {
     const formatter = schedulingLib.getDateFormatter()
-    const date = formatter.dateFromString(tag.name)
+    const dateString = schedulingLib.getDateStringFromTag(tag)
+    const date = formatter.dateFromString(dateString)
     return date
+  }
+
+  schedulingLib.getDateStringFromTag = (tag) => {
+    const matches = tag.name.match(/ \((.*)\)$/)
+    return matches ? matches[1] : tag.name
   }
 
   schedulingLib.isToday = (date) => Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()

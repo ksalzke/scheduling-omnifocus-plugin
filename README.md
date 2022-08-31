@@ -127,6 +127,10 @@ Returns the 'Scheduling' tag set in preferences. If no tag has been set, or the 
 
 Returns the date for a given tag. If no date can be parsed, returns null.
 
+## `getDateStringFromTag (tag: Tag) : String`
+
+Returns the date string for a given tag.
+
 ## `isToday (date: Date) : Boolean`
 
 Returns true if the given date is today; otherwise, returns false.
