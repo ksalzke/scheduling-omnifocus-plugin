@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.0.1...v2.0.2) (2022-11-05)
+
+
+### Bug Fixes
+
+* :lipstick: correct label for Preferences dialogue ([cb8acba](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/cb8acba1d4dbc18567115e05c44d37fdb2d54f21))
+
+
+
 ## [2.0.1](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.0.0...v2.0.1) (2022-04-07)
 
 

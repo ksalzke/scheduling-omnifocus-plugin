@@ -3,7 +3,7 @@
   "identifier": "com.KaitlinSalzke.Scheduling",
   "author": "Kaitlin Salzke",
   "description": "A series of scripts to assist with scheduling in OmniFocus.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "actions": [
     {
       "identifier": "rescheduleTask",
