@@ -23,7 +23,7 @@
 
     form.addField(new Form.Field.Checkbox('useWeekdays', 'Use recurring weekday-based scheduling', useWeekdays))
     
-    await form.show('Preferences: Agendas', 'OK')
+    await form.show('Preferences: Scheduling', 'OK')
 
     // save preferences
     if (form.values.todayTag) syncedPrefs.write('todayTagID', form.values.todayTag.id.primaryKey)
