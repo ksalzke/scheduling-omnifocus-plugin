@@ -126,6 +126,9 @@
   schedulingLib.isToday = (date) => Calendar.current.startOfDay(date).getTime() === Calendar.current.startOfDay(new Date()).getTime()
 
   schedulingLib.promptAndReschedule = async (tasks) => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const useScheduledNotifications = syncedPrefs.readBoolean('useScheduledNotifications')
+
     const form = new Form()
 
     form.addField(new Form.Field.Date('date', 'Date', null, schedulingLib.getDateFormatter()))
@@ -141,6 +144,7 @@
     const schedulingTag = await schedulingLib.getSchedulingTag()
     const todayTag = schedulingLib.todayTag()
     const schedulingTags = schedulingTag.children
+    const useScheduledNotifications = syncedPrefs.readBoolean('useScheduledNotifications')
 
     if (schedulingLib.isToday(date)) {
       // flag/tag as appropriate
@@ -159,6 +163,20 @@
       const dateTag = await schedulingLib.getTag(date)
       task.addTag(dateTag)
     }
+
+    if (useScheduledNotifications) {
+
+      // remove old notifications
+      for (notification of task.notifications) task.removeNotification(notification)
+      // add new notification
+      const defaultDueTime = settings.objectForKey('DefaultDueTime')
+      const defaultDueTimeSplit = defaultDueTime.split(':')
+      const defaultDueHours = defaultDueTimeSplit[0]
+      const defaultDueMinutes = defaultDueTimeSplit[1]
+      date.setHours(defaultDueHours,defaultDueMinutes,0)
+      task.addNotification(date)
+    }
+
   }
 
   schedulingLib.addToToday = (task) => {

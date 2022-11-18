@@ -7,6 +7,7 @@
     const schedulingTag = this.schedulingLib.schedulingTag()
     const todayTag = this.schedulingLib.todayTag()
     const flagToday = syncedPrefs.readBoolean('flagToday')
+    const useScheduledNotifications = syncedPrefs.readBoolean('useScheduledNotifications')
     const useWeekdays = syncedPrefs.readBoolean('useWeekdays')
 
     // create and show form
@@ -20,6 +21,7 @@
     form.addField(todayTagField)
 
     form.addField(new Form.Field.Checkbox('flagToday', 'Flag denotes \'Today\' tasks', flagToday))
+    form.addField(new Form.Field.Checkbox('useScheduledNotifications', 'Use scheduled notifications', useScheduledNotifications))
 
     form.addField(new Form.Field.Checkbox('useWeekdays', 'Use recurring weekday-based scheduling', useWeekdays))
     
@@ -29,6 +31,7 @@
     if (form.values.todayTag) syncedPrefs.write('todayTagID', form.values.todayTag.id.primaryKey)
     else syncedPrefs.write('todayTagID', null)
     syncedPrefs.write('flagToday', form.values.flagToday)
+    syncedPrefs.write('useScheduledNotifications', form.values.useScheduledNotifications)
     syncedPrefs.write('schedulingTagID', form.values.schedulingTag.id.primaryKey)
     syncedPrefs.write('useWeekdays', form.values.useWeekdays)
   })

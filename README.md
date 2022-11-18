@@ -56,6 +56,7 @@ The following preferences are available:
 * **Scheduling tag:** This is the root tag under which all 'Scheduling' tags are created by the plug-in. It can be named anything and located anywhere in the tag hierarchy.
 * **'Today' tag:** A tag that denotes tasks that have been scheduled for Today. This is optional. If 'None' is selected, no today tag is used.
 * **Flag denotes 'Today' tasks.** If selected, flags are used to represent 'Today' tasks. Note that if a task is rescheduled from today and this checkbox is selected, the flag will be _removed_ from the task. 
+* **Use scheduled notifications.** If selected, a notification will be added to the task on the chosen date. (Note that any existing notifications will be removed first.) This allows the task to show in the forecast view if 'Items with scheduled notifications' is ticked.
 * **Use recurring weekday-based scheduling.** If selected, tags for each day of the week (e.g. 'Wednesdays', 'Thursdays' and 'Fridays') will also be created, which can contain repeating tasks. These will be marked as 'Today' each week on that day, provided the defer date of the task is not _after_ the specified day. (e.g. if a task is tagged with 'Wednesdays' but is deferred until Thursday, it will be assumed the task has been completed early and won't be marked 'Today')
 
 # Functions
@@ -146,6 +147,8 @@ Prompts the user to enter a date (which may use Omni's [shorthand date terminolo
 ## `rescheduleTask (task: Task, date: Date)`
  
 **Asynchronous.** 'Reschedules' the given task to the specified date by removing any existing 'scheduling' tags, and adding the tag for the given day.
+
+Depending on the user's preferences, a notification will also be added (and existing notifications removed) and/or a flag added to tasks scheduled to today.
 
 ## `addToToday (task: Task)`
 
