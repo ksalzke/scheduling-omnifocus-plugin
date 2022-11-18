@@ -39,6 +39,12 @@ It prompts the user to enter a date (which may use Omni's [shorthand date termin
 
 ![Rescheduling a task](https://user-images.githubusercontent.com/16893787/155266319-deff7fd7-b6a2-4a4a-a94e-4dd7221b0bc3.png)
 
+## Unschedule Task(s)
+
+This action can be run when one or more tasks are selected.
+
+It 'unschedules' the selected tasks, based on the settings in preferences.
+
 ## Update Schedule
 
 This action can be run at any time. You may wish to run this in the background on a daily basis using the included Keyboard Maestro macro.
@@ -149,6 +155,10 @@ Prompts the user to enter a date (which may use Omni's [shorthand date terminolo
 **Asynchronous.** 'Reschedules' the given task to the specified date by removing any existing 'scheduling' tags, and adding the tag for the given day.
 
 Depending on the user's preferences, a notification will also be added (and existing notifications removed) and/or a flag added to tasks scheduled to today.
+
+## `unscheduleTasks (tasks: Array<Task>)`
+
+**Asynchronous.** 'Unschedules' the given task by removing any existing scheduling tags, and (depeding on preferences) the flag or scheduled notifications.
 
 ## `addToToday (task: Task)`
 

@@ -179,6 +179,20 @@
 
   }
 
+  schedulingLib.unscheduleTasks = async (tasks) => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+    const todayTag = schedulingLib.todayTag()
+    for (task of tasks) {
+      if (syncedPrefs.readBoolean('flagToday')) task.flagged = false
+      if (syncedPrefs.readBoolean('useScheduledNotifications')) {
+        for (notification of task.notifications) task.removeNotification(notification)
+        }
+      if (todayTag !== null) task.removeTag(todayTag)
+      task.removeTags(schedulingTags)
+    }
+    
+  }
+
   schedulingLib.addToToday = (task) => {
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     if (syncedPrefs.readBoolean('flagToday')) task.flagged = true

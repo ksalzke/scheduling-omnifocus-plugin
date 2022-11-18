@@ -10,6 +10,10 @@
       "image": "calendar.badge.plus"
     },
     {
+      "identifier": "unscheduleTask",
+      "image": "calendar.badge.minus"
+    },
+    {
       "identifier": "updateSchedule",
       "image": "sun.max"
     },
