@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.1.0...v2.2.0) (2023-01-31)
+
+
+### Features
+
+* :sparkles: enable plug-in to act on projects, not just tasks ([147a732](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/147a73296b663d4cc840a02d07c149a3f09847ea)), closes [#9](https://github.com/ksalzke/scheduling-omnifocus-plugin/issues/9)
+
+
+
 # [2.1.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.0.2...v2.1.0) (2022-11-18)
 
 
