@@ -1,3 +1,12 @@
+## [2.2.1](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.2.0...v2.2.1) (2023-06-04)
+
+
+### Bug Fixes
+
+* :bug: fix bug where tags were not removed when unscheduling, and unscheduling stopped at first task ([7d47b43](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/7d47b43d39a06f45f5e3f7706f06708711fa9b36))
+
+
+
 # [2.2.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.1.0...v2.2.0) (2023-01-31)
 
 
