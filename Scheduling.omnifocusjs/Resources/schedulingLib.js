@@ -182,6 +182,7 @@
   schedulingLib.unscheduleTasks = async (tasks) => {
     const syncedPrefs = schedulingLib.loadSyncedPrefs()
     const todayTag = schedulingLib.todayTag()
+    const schedulingTags = schedulingLib.schedulingTag().children
     for (task of tasks) {
       if (syncedPrefs.readBoolean('flagToday')) task.flagged = false
       if (syncedPrefs.readBoolean('useScheduledNotifications')) {
