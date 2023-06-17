@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.2.1...v2.3.0) (2023-06-17)
+
+
+### Features
+
+* :sparkles: allow unscheduling of projects, not just tasks ([c8fb05d](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/c8fb05dba5ac2188583baf5bd570f80ed7ae26d7))
+
+
+
 ## [2.2.1](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.2.0...v2.2.1) (2023-06-04)
 
 
