@@ -107,7 +107,7 @@
     if (dateString === null) return schedulingLib.todayTag()
 
     const parent = await schedulingLib.getSchedulingTag()
-    const tag = parent.children.find(tag => tag.name.includes(dateString)) || await schedulingLib.createTag(date)
+    const tag = parent.children.find(tag => tag.name === dateString || tag.name.includes(`(${dateString})`)) || await schedulingLib.createTag(date)
     return tag
   }
 
