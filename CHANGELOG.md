@@ -1,3 +1,12 @@
+## [2.3.1](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.3.0...v2.3.1) (2023-08-13)
+
+
+### Bug Fixes
+
+* :bug: fix getTag logic when searching for date string, fixes [#11](https://github.com/ksalzke/scheduling-omnifocus-plugin/issues/11) ([2711211](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/2711211e8c21d4e2c59fa2459068247b818b4f07))
+
+
+
 # [2.3.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.2.1...v2.3.0) (2023-06-17)
 
 
