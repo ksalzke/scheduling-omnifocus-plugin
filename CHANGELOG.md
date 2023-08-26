@@ -1,3 +1,12 @@
+# [2.4.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.3.1...v2.4.0) (2023-08-26)
+
+
+### Features
+
+* :sparkles: add getScheduleInfo to return string containing scheduled dates ([631f3ce](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/631f3ce66ac645658b8345344f013317549fb9e7))
+
+
+
 ## [2.3.1](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.3.0...v2.3.1) (2023-08-13)
 
 
