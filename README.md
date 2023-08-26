@@ -182,3 +182,7 @@ Moves all of the tasks from a tag to today by running `addToToday` on each of it
 3. if the option is selected in preferences, schedules any relevant 'weekdays' tasks for today, and
    
 4. re-orders the scheduling tags using `recreateTagOrder`.
+
+## `getScheduleInfo (task: Task) : string`
+
+**Asynchronous.** This function takes a task as input and returns details about existing scheduling information as a string. e.g. `Tomorrow (24 Aug 2023)` or `Fridays` or `Tomorrow (24 Aug 2023) and Fridays`.

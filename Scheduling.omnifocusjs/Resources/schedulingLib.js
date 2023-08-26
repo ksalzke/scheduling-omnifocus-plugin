@@ -266,5 +266,26 @@
     syncedPrefs.write('lastUpdated', new Date())
   }
 
+  schedulingLib.getScheduleInfo = async (task) => {
+    const syncedPrefs = schedulingLib.loadSyncedPrefs()
+
+    const schedulingTag = await schedulingLib.getSchedulingTag()
+    const schedulingTags = schedulingTag.children
+
+    const appliedTags = task.tags.filter(tag => schedulingTags.includes(tag))
+
+    const oxford = (arr, conjunction, ifempty) => {
+      let l = arr.length;
+      if (!l) return ifempty;
+      if (l<2) return arr[0];
+      if (l<3) return arr.join(` ${conjunction} `);
+      arr = arr.slice();
+      arr[l-1] = `${conjunction} ${arr[l-1]}`;
+      return arr.join(", ");
+  }
+
+    return oxford(appliedTags.map(t => t.name), 'and', '')
+  }
+
   return schedulingLib
 })()
