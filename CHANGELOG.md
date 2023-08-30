@@ -1,3 +1,12 @@
+# [2.5.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.4.0...v2.5.0) (2023-08-30)
+
+
+### Features
+
+* :children_crossing: use default scheduled time instead of default due time ([987972e](https://github.com/ksalzke/scheduling-omnifocus-plugin/commit/987972ee02649c48e5cd7bd553a0368cd67df345)), closes [#12](https://github.com/ksalzke/scheduling-omnifocus-plugin/issues/12)
+
+
+
 # [2.4.0](https://github.com/ksalzke/scheduling-omnifocus-plugin/compare/v2.3.1...v2.4.0) (2023-08-26)
 
 
