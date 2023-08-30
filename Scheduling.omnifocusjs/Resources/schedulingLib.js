@@ -169,11 +169,11 @@
       // remove old notifications
       for (notification of task.notifications) task.removeNotification(notification)
       // add new notification
-      const defaultDueTime = settings.objectForKey('DefaultDueTime')
-      const defaultDueTimeSplit = defaultDueTime.split(':')
-      const defaultDueHours = defaultDueTimeSplit[0]
-      const defaultDueMinutes = defaultDueTimeSplit[1]
-      date.setHours(defaultDueHours,defaultDueMinutes,0)
+      const defaultScheduledTime = settings.objectForKey('DefaultScheduledNotificationTime')
+      const defaultScheduledTimeSplit = defaultScheduledTime.split(':')
+      const defaultScheduledHours = defaultScheduledTimeSplit[0]
+      const defaultScheduledMinutes = defaultScheduledTimeSplit[1]
+      date.setHours(defaultScheduledHours,defaultScheduledMinutes,0)
       task.addNotification(date)
     }
 
