@@ -1,3 +1,17 @@
+> [!WARNING]
+>
+> ## Deprecated
+>
+> This plug-in is deprecated and is no longer maintained.
+>
+> Scheduling for OmniFocus was created to assign tasks a “do date” using a system of date-based tags and related automation. OmniFocus 4.7 introduced the native **Planned Date** field, which can be used to specify when you intend to work on an action, action group or project.
+>
+> Planned items can also appear directly in the Forecast perspective, removing the need for the tag-based scheduling workaround provided by this plug-in.
+>
+> Users of current versions of OmniFocus are encouraged to use Planned Dates instead.
+>
+> This repository remains available for reference, but its use is no longer recommended.
+
 # About
 
 This is an OmniFocus plug-in that assigns a 'do date' to tasks using a system of tags.
